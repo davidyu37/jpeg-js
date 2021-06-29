@@ -3,6 +3,8 @@ var fs = require('fs'),
   assert = require('assert'),
   jpeg = require('..');
 
+const Buffer = require('buffer');
+
 function fixture(name) {
   return fs.readFileSync(path.join(__dirname, 'fixtures', name));
 }
@@ -13,11 +15,11 @@ const SUPER_LARGE_JPEG_BASE64 =
 const SUPER_LARGE_JPEG_BUFFER = Buffer.from(SUPER_LARGE_JPEG_BASE64, 'base64');
 
 it('should be able read image with a bad e1 marker not preceeded by ff', function () {
-    var jpegData = fixture('table-with-bad-e1.jpg');
-    var rawImageData = jpeg.decode(jpegData);
-    var expected = fixture('table-with-good-e1.jpg');
-    var rawExpectedImageData = jpeg.decode(expected);
-    expect(rawImageData.data).toEqual(rawExpectedImageData.data);
+  var jpegData = fixture('table-with-bad-e1.jpg');
+  var rawImageData = jpeg.decode(jpegData);
+  var expected = fixture('table-with-good-e1.jpg');
+  var rawExpectedImageData = jpeg.decode(expected);
+  expect(rawImageData.data).toEqual(rawExpectedImageData.data);
 });
 
 it('should be able to decode a JPEG', function () {
@@ -197,7 +199,7 @@ it('should be able to create a JPEG from an array with comment', function () {
     height: height,
     comments: comments,
   };
-  var jpegImageData = jpeg.encode(rawImageData, 50); 
+  var jpegImageData = jpeg.encode(rawImageData, 50);
   expect(jpegImageData.width).toEqual(width);
   expect(jpegImageData.height).toEqual(height);
   var expected = fixture('redbox_comment.jpg');
@@ -207,7 +209,7 @@ it('should be able to create a JPEG from an array with comment', function () {
 
 it('should be able to decode a JPEG into a typed array', function () {
   var jpegData = fixture('grumpycat.jpg');
-  var rawImageData = jpeg.decode(jpegData, {useTArray: true});
+  var rawImageData = jpeg.decode(jpegData, { useTArray: true });
   expect(rawImageData.width).toEqual(320);
   expect(rawImageData.height).toEqual(180);
   var expected = fixture('grumpycat.rgba');
@@ -217,7 +219,7 @@ it('should be able to decode a JPEG into a typed array', function () {
 
 it('should be able to decode a JPEG from a typed array into a typed array', function () {
   var jpegData = fixture('grumpycat.jpg');
-  var rawImageData = jpeg.decode(new Uint8Array(jpegData), {useTArray: true});
+  var rawImageData = jpeg.decode(new Uint8Array(jpegData), { useTArray: true });
   expect(rawImageData.width).toEqual(320);
   expect(rawImageData.height).toEqual(180);
   var expected = fixture('grumpycat.rgba');
@@ -240,7 +242,7 @@ it('should be able to decode a JPEG with options', function () {
 
 it('should be able to decode a JPEG into RGB', function () {
   var jpegData = fixture('grumpycat.jpg');
-  var rawImageData = jpeg.decode(new Uint8Array(jpegData), {useTArray: true, formatAsRGBA: false});
+  var rawImageData = jpeg.decode(new Uint8Array(jpegData), { useTArray: true, formatAsRGBA: false });
   expect(rawImageData.width).toEqual(320);
   expect(rawImageData.height).toEqual(180);
   var expected = fixture('grumpycat.rgb');
@@ -280,7 +282,7 @@ it('should limit resolution exposure', function () {
 });
 
 it('should limit memory exposure', function () {
-  expect(() => jpeg.decode(SUPER_LARGE_JPEG_BUFFER, {maxResolutionInMP: 500})).toThrow(
+  expect(() => jpeg.decode(SUPER_LARGE_JPEG_BUFFER, { maxResolutionInMP: 500 })).toThrow(
     /maxMemoryUsageInMB limit exceeded by at least \d+MB/,
   );
 
